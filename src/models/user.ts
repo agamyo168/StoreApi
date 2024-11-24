@@ -66,7 +66,6 @@ class Users {
     FROM ${SCHEMA}.users
     `;
     const result = await conn.query(sql);
-    console.log(result.rows);
     conn.release();
     return result.rows;
   };

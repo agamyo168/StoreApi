@@ -13,13 +13,23 @@ describe('Testing API endpoints', () => {
 describe('Testing auth API endpoints', () => {
   it(`should return ${StatusCodes.CREATED} for a generic test user sign up`, async () => {
     const res = await request.post('/api/v1/auth/register').send({
-      username: 'test',
+      username: 'signup',
       password: 'test',
       firstName: 'test',
       lastName: 'test',
     });
     expect(res.status).toBe(StatusCodes.CREATED);
     expect(res.body.success).toBe(true);
+  });
+  it(`should return ${StatusCodes.BAD_REQUEST} for providing an already used username`, async () => {
+    const res = await request.post('/api/v1/auth/register').send({
+      username: 'signup',
+      password: 'test',
+      firstName: 'test',
+      lastName: 'test',
+    });
+    expect(res.status).toBe(StatusCodes.BAD_REQUEST);
+    expect(res.body.success).toBe(false);
   });
   //NOT VALID TEST-> You should be testing this with a user that doesn't rely on the success of register api.
   it(`should give ${StatusCodes.OK} for a valid test user login`, async () => {

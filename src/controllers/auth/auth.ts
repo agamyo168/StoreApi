@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import Users, { User } from '../../models/user';
 import { StatusCodes } from 'http-status-codes';
 import Authentication from '../../services/authenticationService';
+import BadRequestError from '../../errors/bad-request-error';
 
 const register = async (_req: Request, res: Response, next: NextFunction) => {
   const { username, password, firstName, lastName } = _req.body;
@@ -9,22 +10,17 @@ const register = async (_req: Request, res: Response, next: NextFunction) => {
   const isNotValid = !username || !password || !firstName || !lastName;
   if (isNotValid) {
     return next(
-      res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        error:
-          'Bad request: You need to provide username, password and your fullname',
-      })
+      new BadRequestError(
+        'Bad request: you did not provide either username, password, firstname or lastname'
+      )
     );
   }
   //Need way too many validations -> not_empty. [3, 20] chars.
   //Unique user:
-  const isAvailable = Authentication.isAvailable(username);
+  const isAvailable = await Authentication.isAvailable(username);
   if (!isAvailable) {
     return next(
-      res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        error: 'Bad request: this username already exists!',
-      })
+      new BadRequestError('Bad request: this username already exists')
     );
   }
   const user: User = await Users.create({
@@ -41,10 +37,9 @@ const login = async (_req: Request, res: Response, next: NextFunction) => {
   const isNotValid = !username || !password;
   if (isNotValid) {
     return next(
-      res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        error: "Bad request: you didn't provide username or password",
-      })
+      new BadRequestError(
+        "Bad request: you didn't provide username or password"
+      )
     );
   }
   const user: User = { username, password };
