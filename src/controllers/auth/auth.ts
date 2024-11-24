@@ -8,9 +8,9 @@ const register = async (_req: Request, res: Response, next: NextFunction) => {
   const isNotValid = !username || !password || !firstName || !lastName;
   if (isNotValid) {
     return next(
-      res.status(400).json({
+      res.status(StatusCodes.BAD_REQUEST).json({
         error:
-          'Bad request you forgot to provide username, password or your fullname',
+          'Bad request: You need to provide username, password and your fullname',
       })
     );
   }
@@ -21,14 +21,25 @@ const register = async (_req: Request, res: Response, next: NextFunction) => {
     firstName,
     lastName,
   });
-  res.status(StatusCodes.CREATED).json(user);
-  //Should I make a service for bcrypt or just do it?
-
-  // res.send('Login Successful');
+  res.status(StatusCodes.CREATED).json({ success: true, ...user });
 };
 
-const login = async (_req: Request, res: Response) => {
-  res.send('Login Successful');
+const login = async (_req: Request, res: Response, next: NextFunction) => {
+  const { username, password } = _req.body;
+  const isNotValid = !username || !password;
+  if (isNotValid) {
+    return next(
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        error: "Bad request: you didn't provide username or password",
+      })
+    );
+  }
+  // const user: User = await Users.findByName(username);
+  const token = 'a valid token';
+  res
+    .status(StatusCodes.ACCEPTED)
+    .json({ success: true, username: 'name', id: 'id', token });
 };
 
 export { login, register };

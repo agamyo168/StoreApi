@@ -14,8 +14,10 @@
     "test": "npm run build && npm run jasmine",
     "clean": "rm -rf dist",
     "watch": "tsc-watch --esModuleInterop src/app.ts --outDir ./dist",
-    "migrate": "npx db-migrate --env dev up",
-    "test:migrate": "npx db-migrate up && jasmine-ts && db-migrate db:drop test"
+    "migrate": "npx db-migrate up",
+    "migrate:down":"npx db-migrate down",
+    "migrate:reset":"npx db-migrate reset",
+    "test:migrate": "npx db-migrate reset && npx db-migrate up && npm run build && npm run jasmine && npx db-migrate reset"
   },
   "keywords": [],
   "author": "",
@@ -51,6 +53,7 @@
     "db-migrate-pg": "^1.5.2",
     "express": "^4.21.1",
     "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.1"
   }
 }
