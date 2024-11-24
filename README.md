@@ -26,7 +26,7 @@ tests -> pascalCase?
 - [x] Test SERVICE isAvailable
 - [x] Test SERVICE verifyUser
 - [ ] Test SERVICE createToken
-- [ ] Test ENDPOINT login
+- [x] Test ENDPOINT login
 - [ ] Test DB findAllUsers
 - [ ] Test ENDPOINT getAllUsers
 - [ ] Test DB findUserById

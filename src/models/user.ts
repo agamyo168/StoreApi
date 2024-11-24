@@ -1,7 +1,7 @@
 import Client from '../database/database';
 import bcrypt from 'bcrypt';
 export type User = {
-  id?: string;
+  id?: string | number;
   username: string;
   password: string;
   firstName?: string;
@@ -45,6 +45,30 @@ class Users {
     const result = await conn.query(sql, [username]);
     conn.release();
     return result.rows[0];
+  };
+
+  static findById = async (id: string | number): Promise<User> => {
+    const conn = await Client.connect();
+    const sql = `
+    SELECT * 
+    FROM ${SCHEMA}.users
+    WHERE id = $1
+    `;
+    const result = await conn.query(sql, [id]);
+    conn.release();
+    return result.rows[0];
+  };
+
+  static findAll = async (): Promise<User[]> => {
+    const conn = await Client.connect();
+    const sql = `
+    SELECT * 
+    FROM ${SCHEMA}.users
+    `;
+    const result = await conn.query(sql);
+    console.log(result.rows);
+    conn.release();
+    return result.rows;
   };
 }
 export default Users;
