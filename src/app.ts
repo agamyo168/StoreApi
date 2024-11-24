@@ -1,8 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import userRouter from './routes/api/v1/userRoutes';
+import userRouter from './routes/api/v1/user-route';
 import notFoundMiddleware from './middlewares/not-found';
-import authRouter from './routes/api/v1/auth/authRoutes';
+import authRouter from './routes/api/v1/auth/auth-route';
 
 dotenv.config();
 const app = express();

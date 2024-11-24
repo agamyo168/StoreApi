@@ -35,5 +35,16 @@ class Users {
       throw new Error(`Couldn't create user. Error:${err}`);
     }
   };
+  static findByName = async (username: string): Promise<User> => {
+    const conn = await Client.connect();
+    const sql = `
+    SELECT * 
+    FROM ${SCHEMA}.users
+    WHERE username = $1
+    `;
+    const result = await conn.query(sql, [username]);
+    conn.release();
+    return result.rows[0];
+  };
 }
 export default Users;

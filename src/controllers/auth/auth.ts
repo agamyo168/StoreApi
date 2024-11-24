@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import Users, { User } from '../../models/user';
 import { StatusCodes } from 'http-status-codes';
+import Authentication from '../../services/authenticationService';
 
 const register = async (_req: Request, res: Response, next: NextFunction) => {
   const { username, password, firstName, lastName } = _req.body;
@@ -9,12 +10,23 @@ const register = async (_req: Request, res: Response, next: NextFunction) => {
   if (isNotValid) {
     return next(
       res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
         error:
           'Bad request: You need to provide username, password and your fullname',
       })
     );
   }
-  //I should now create a user:User object prepare the date and stuff?
+  //Need way too many validations -> not_empty. [3, 20] chars.
+  //Unique user:
+  const isAvailable = Authentication.isAvailable(username);
+  if (!isAvailable) {
+    return next(
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        error: 'Bad request: this username already exists!',
+      })
+    );
+  }
   const user: User = await Users.create({
     username,
     password,
@@ -35,11 +47,9 @@ const login = async (_req: Request, res: Response, next: NextFunction) => {
       })
     );
   }
-  // const user: User = await Users.findByName(username);
-  const token = 'a valid token';
-  res
-    .status(StatusCodes.ACCEPTED)
-    .json({ success: true, username: 'name', id: 'id', token });
+  const user: User = { username, password };
+  const token = await Authentication.verifyUser(user);
+  res.status(StatusCodes.ACCEPTED).json({ success: true, token });
 };
 
 export { login, register };
