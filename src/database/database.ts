@@ -9,5 +9,12 @@ const client = new Pool({
   user: DB_USER, //user created with certain privileges to access this database ... NOT THE ADMIN USER (postgres)
   password: DB_PASS,
 });
+// Define a type for the parameters
+type QueryParams = (string | number | boolean | null)[]; // Adjust as needed
 
+export const db = {
+  query: (text: string, params?: QueryParams) => {
+    return client.query(text, params);
+  },
+};
 export default client;

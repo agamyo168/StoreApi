@@ -3,12 +3,14 @@ import Authentication from '../../services/authenticationService';
 
 describe('Testing Authentication Service', () => {
   const validUser: User = {
+    id: 1,
     username: 'validUser',
     password: 'validPassword',
     firstName: 'validFirstName',
     lastName: 'validLastName',
   };
   const fakeUser: User = {
+    id: 2,
     username: 'fakeUsername',
     password: 'fakePassword',
     firstName: 'fakeFirstName',

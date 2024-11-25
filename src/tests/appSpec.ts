@@ -1,6 +1,7 @@
 import supertest from 'supertest';
 import app from '../app';
 import { StatusCodes } from 'http-status-codes';
+import Users from '../models/user';
 
 const request = supertest(app);
 describe('Testing endpoints: ', () => {
@@ -11,31 +12,30 @@ describe('Testing endpoints: ', () => {
 });
 
 describe('Testing Authentication endpoints: ', () => {
+  const genericUser = {
+    id: 1,
+    username: 'genericUser',
+    password: 'genericPassword',
+    firstName: 'genericFirstName',
+    lastName: 'genericLastName',
+  };
+  afterAll(async () => {
+    await Users.removeByName(genericUser.username);
+  });
   it(`should return ${StatusCodes.CREATED} for a generic test user sign up`, async () => {
-    const res = await request.post('/api/v1/auth/register').send({
-      username: 'generic',
-      password: 'test',
-      firstName: 'test',
-      lastName: 'test',
-    });
+    const res = await request.post('/api/v1/auth/register').send(genericUser);
     expect(res.status).toBe(StatusCodes.CREATED);
     expect(res.body.success).toBe(true);
   });
   it(`should return ${StatusCodes.BAD_REQUEST} for providing an already used username`, async () => {
-    const res = await request.post('/api/v1/auth/register').send({
-      username: 'generic',
-      password: 'test',
-      firstName: 'test',
-      lastName: 'test',
-    });
+    const res = await request.post('/api/v1/auth/register').send(genericUser);
     expect(res.status).toBe(StatusCodes.BAD_REQUEST);
     expect(res.body.success).toBe(false);
   });
-  //NOT VALID TEST-> You should be testing this with a user that doesn't rely on the success of register api.
   it(`should give ${StatusCodes.OK} for a valid test user login`, async () => {
     const res = await request
       .post('/api/v1/auth/login')
-      .send({ username: 'test', password: 'test' });
+      .send({ username: genericUser.username, password: genericUser.password });
     expect(res.status).toBe(StatusCodes.ACCEPTED);
     expect(res.body.success).toBe(true);
   });

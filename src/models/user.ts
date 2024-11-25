@@ -36,59 +36,84 @@ class Users {
     }
   };
   static findByName = async (username: string): Promise<User> => {
-    const conn = await Client.connect();
-    const sql = `
+    try {
+      const conn = await Client.connect();
+      const sql = `
     SELECT * 
     FROM ${SCHEMA}.users
     WHERE username = $1
     `;
-    const result = await conn.query(sql, [username]);
-    conn.release();
-    return result.rows[0];
+      const result = await conn.query(sql, [username]);
+      conn.release();
+      return result.rows[0];
+    } catch (err) {
+      console.error(err);
+      throw new Error(`Error: ${err}`);
+    }
   };
 
-  static findById = async (id: string | number): Promise<User> => {
-    const conn = await Client.connect();
-    const sql = `
-    SELECT * 
-    FROM ${SCHEMA}.users
-    WHERE id = $1
-    `;
-    const result = await conn.query(sql, [id]);
-    conn.release();
-    return result.rows[0];
+  static findById = async (id: string | number | undefined): Promise<User> => {
+    try {
+      const conn = await Client.connect();
+      const sql = `
+      SELECT * 
+      FROM ${SCHEMA}.users
+      WHERE id = $1
+      `;
+      const result = await conn.query(sql, [id]);
+      conn.release();
+      return result.rows[0];
+    } catch (err) {
+      console.error(err);
+      throw new Error(`Error: ${err}`);
+    }
   };
 
   static findAll = async (): Promise<User[]> => {
-    const conn = await Client.connect();
-    const sql = `
+    try {
+      const conn = await Client.connect();
+      const sql = `
     SELECT * 
     FROM ${SCHEMA}.users
     `;
-    const result = await conn.query(sql);
-    conn.release();
-    return result.rows;
+      const result = await conn.query(sql);
+      conn.release();
+      return result.rows;
+    } catch (err) {
+      console.error(err);
+      throw new Error(`Error: ${err}`);
+    }
   };
 
-  static removeById = async (id: number | string) => {
-    const conn = await Client.connect();
-    const sql = `
-    DELETE
-    FROM ${SCHEMA}.users
-    WHERE id = $1
-    `;
-    await conn.query(sql, [id]);
-    conn.release();
+  static removeById = async (id: string | number | undefined) => {
+    try {
+      const conn = await Client.connect();
+      const sql = `
+      DELETE
+      FROM ${SCHEMA}.users
+      WHERE id = $1
+      `;
+      await conn.query(sql, [id]);
+      conn.release();
+    } catch (err) {
+      console.error(err);
+      throw new Error(`Error: ${err}`);
+    }
   };
   static removeByName = async (username: string) => {
-    const conn = await Client.connect();
-    const sql = `
-    DELETE
-    FROM ${SCHEMA}.users
-    WHERE username = $1
-    `;
-    await conn.query(sql, [username]);
-    conn.release();
+    try {
+      const conn = await Client.connect();
+      const sql = `
+      DELETE
+      FROM ${SCHEMA}.users
+      WHERE username = $1
+      `;
+      await conn.query(sql, [username]);
+      conn.release();
+    } catch (err) {
+      console.error(err);
+      throw new Error(`Error: ${err}`);
+    }
   };
 }
 export default Users;

@@ -17,7 +17,7 @@
     "migrate": "npx db-migrate up",
     "migrate:down": "npx db-migrate down",
     "migrate:reset": "npx db-migrate reset",
-    "test:migrate": "npx db-migrate reset && npx db-migrate up && npm run build && npm run jasmine && npx db-migrate reset"
+    "test:migrate": "npx db-migrate reset && npx db-migrate up && npm run build && npm run jasmine"
   },
   "keywords": [],
   "author": "",
