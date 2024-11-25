@@ -9,8 +9,15 @@ export const getIndex = async (_req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({ success: true, result: allUsers });
 };
 
-export const getUserById = async (_req: Request, res: Response) => {
+export const getUserById = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id } = _req.params;
+  if (!id) {
+    return next(new BadRequestError('Please provide an id'));
+  }
   const user: User = await Users.findById(id);
   res.status(StatusCodes.OK).json({ success: true, result: user });
 };
