@@ -69,5 +69,26 @@ class Users {
     conn.release();
     return result.rows;
   };
+
+  static removeById = async (id: number | string) => {
+    const conn = await Client.connect();
+    const sql = `
+    DELETE
+    FROM ${SCHEMA}.users
+    WHERE id = $1
+    `;
+    await conn.query(sql, [id]);
+    conn.release();
+  };
+  static removeByName = async (username: string) => {
+    const conn = await Client.connect();
+    const sql = `
+    DELETE
+    FROM ${SCHEMA}.users
+    WHERE username = $1
+    `;
+    await conn.query(sql, [username]);
+    conn.release();
+  };
 }
 export default Users;

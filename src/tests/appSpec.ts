@@ -3,17 +3,17 @@ import app from '../app';
 import { StatusCodes } from 'http-status-codes';
 
 const request = supertest(app);
-describe('Testing API endpoints', () => {
+describe('Testing endpoints: ', () => {
   it(`should return ${StatusCodes.NOT_FOUND} for accessing invalid url`, async () => {
     const res = await request.get('/invalid-url');
     expect(res.status).toBe(StatusCodes.NOT_FOUND);
   });
 });
 
-describe('Testing auth API endpoints', () => {
+describe('Testing Authentication endpoints: ', () => {
   it(`should return ${StatusCodes.CREATED} for a generic test user sign up`, async () => {
     const res = await request.post('/api/v1/auth/register').send({
-      username: 'signup',
+      username: 'generic',
       password: 'test',
       firstName: 'test',
       lastName: 'test',
@@ -23,7 +23,7 @@ describe('Testing auth API endpoints', () => {
   });
   it(`should return ${StatusCodes.BAD_REQUEST} for providing an already used username`, async () => {
     const res = await request.post('/api/v1/auth/register').send({
-      username: 'signup',
+      username: 'generic',
       password: 'test',
       firstName: 'test',
       lastName: 'test',

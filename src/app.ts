@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import userRouter from './routes/api/v1/user-route';
 import notFoundMiddleware from './middlewares/not-found';
 import authRouter from './routes/api/v1/auth/auth-route';
-import errorHandlerMiddleware from './middlewares/errorhandler';
+import errorHandlerMiddleware from './middlewares/error-handler';
 
 dotenv.config();
 const app = express();

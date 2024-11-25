@@ -21,13 +21,10 @@ class Authentication {
     return user === undefined; //if username is available it should return true.
   };
   static createToken = (user: User) => {
-    // const isValid = this.verifyUser();
-    // if(isValid){
     const secret = String(process.env.JWT_SECRET);
     return jwt.sign({ name: user.username, id: user.id }, secret, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
-    // }
   };
 }
 

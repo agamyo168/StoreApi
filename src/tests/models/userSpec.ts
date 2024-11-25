@@ -4,18 +4,18 @@ describe('Testing User DB Queries', () => {
   //Test creating duplicate username? I'm already validating on register controller.
   it('should return the same input username for creating a user if success.', async () => {
     const user: User = {
-      username: 'create_db',
+      username: 'signup_db',
       password: 'test',
       firstName: 'test',
       lastName: 'test',
     };
     const result = await Users.create(user);
-    expect(result.username).toEqual('create_db');
+    expect(result.username).toEqual('signup_db');
   });
   //Test findByName:
   it('should return a user given a valid username.', async () => {
-    const result = await Users.findByName('test');
-    expect(result.username).toBe('test');
+    const result = await Users.findByName('signup_db');
+    expect(result.username).toBe('signup_db');
   });
   it('should return undefined given a none existing username.', async () => {
     const result = await Users.findByName('invalid');
