@@ -10,12 +10,16 @@ CREATE TYPE ORDER_STATUS AS ENUM('active', 'complete');
 
 CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
+    user_id INT,
     current_status ORDER_STATUS,
-    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES user(id)
+    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
 CREATE TABLE IF NOT EXISTS order_product (
-    quantity INTEGER,
-    CONSTRAINT fk_order FOREIGN KEY(order_id) REFERENCES order(id),
-    CONSTRAINT fk_product FOREIGN KEY(product_id) REFERENCES product(id)
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    CONSTRAINT order_product_pkey PRIMARY KEY(order_id, product_id),
+    CONSTRAINT fk_order FOREIGN KEY(order_id) REFERENCES orders(id),
+    CONSTRAINT fk_product FOREIGN KEY(product_id) REFERENCES products(id)
 )
