@@ -6,12 +6,12 @@ CREATE TABLE IF NOT EXISTS products (
     category VARCHAR(20)
 );
 
-CREATE TYPE ORDER_STATUS AS ENUM('active', 'complete');
+CREATE TYPE status_of_order AS ENUM('active', 'complete');
 
 CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     user_id INT,
-    current_status ORDER_STATUS,
+    current_status status_of_order,
     CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
