@@ -23,16 +23,20 @@ tests -> pascalCase?
 - [x] ENDPOINT GET user/:id -> findId -- req token
 - [x] ENDPOINT DELETE user/:id -> findId -- req token
 - [x] DB MIGRATE Product
+- [x] DB MIGRATE Order
+- [ ] DB MIGRATE order_products join table. Many-to-Many
 - [x] DB Product create -- req token
 - [ ] DB Product find all
 - [ ] DB Product find by id
+- [ ] DB order create -- req token
+- [ ] DB order find all -- req token
+- [ ] DB order find by id -- req token
 - [ ] ENDPOINT GET product -> findAll
 - [ ] ENDPOINT GET product/:id -> findId
 - [ ] ENDPOINT POST product -> Create -- req token
 - [ ] ENDPOINT GET order -> findAll
 - [ ] ENDPOINT GET order/:id -> findId
 - [ ] ENDPOINT POST order -> Create -- req token
-- [ ] DB MIGRATE order_products join table. Many-to-Many
 - [ ] VALIDATION register
 - [ ] VALIDATION login
 - [ ] ENDPOINT POST user -> Create -- req token

@@ -13,3 +13,9 @@ CREATE TABLE IF NOT EXISTS orders (
     current_status ORDER_STATUS,
     CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES user(id)
 );
+
+CREATE TABLE IF NOT EXISTS order_product (
+    quantity INTEGER,
+    CONSTRAINT fk_order FOREIGN KEY(order_id) REFERENCES order(id),
+    CONSTRAINT fk_product FOREIGN KEY(product_id) REFERENCES product(id)
+)
