@@ -24,7 +24,7 @@ tests -> pascalCase?
 - [x] ENDPOINT DELETE user/:id -> findId -- req token
 - [x] DB MIGRATE Product
 - [x] DB MIGRATE Order
-- [ ] DB MIGRATE order_products join table. Many-to-Many
+- [x] DB MIGRATE order_products join table. Many-to-Many
 - [x] DB Product create -- req token
 - [ ] DB Product find all
 - [ ] DB Product find by id
