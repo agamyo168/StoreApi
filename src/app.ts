@@ -4,12 +4,14 @@ import userRouter from './routes/api/v1/user-route';
 import notFoundMiddleware from './middlewares/not-found';
 import authRouter from './routes/api/v1/auth/auth-route';
 import errorHandlerMiddleware from './middlewares/error-handler';
+import productRoute from './routes/api/v1/product-route';
+import { orderRoute } from './routes/api/v1/order-route';
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 
-app.use('/api/v1', authRouter, userRouter);
+app.use('/api/v1', authRouter, userRouter, productRoute, orderRoute);
 
 //Last middleware stack:
 app.use(notFoundMiddleware);

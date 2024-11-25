@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-export const create = async (_req: Request, res: Response) => {
+export const postOrder = async (_req: Request, res: Response) => {
   res
     .status(StatusCodes.CREATED)
     .json({ success: true, result: 'Created a new order' });

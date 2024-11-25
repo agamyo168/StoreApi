@@ -8,7 +8,7 @@ import {
 
 const productRoute = Router();
 productRoute
-  .route('/product/')
+  .route('/product')
   .get(getProducts)
   .post(authHandler, createProduct);
 productRoute.route('/product/:id').get(getProductById);
