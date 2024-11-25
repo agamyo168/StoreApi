@@ -15,8 +15,9 @@ tests -> pascalCase?
 - [x] SERVICE Authentication isAvailable
 - [x] SERVICE Authentication verifyUser
 - [x] SERVICE Authentication createToken
-- [ ] ENDPOINT GET user ->findAll -- req token
-- [ ] ENDPOINT GET user/:id -> findId -- req token
+- [x] ENDPOINT GET user ->findAll -- req token
+- [x] ENDPOINT GET user/:id -> findId -- req token
+- [x] ENDPOINT DELETE user/:id -> findId -- req token
 - [ ] ENDPOINT POST user -> Create -- req token
 - [ ] ENDPOINT GET product -> findAll
 - [ ] ENDPOINT GET product/:id -> findId
