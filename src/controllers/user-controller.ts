@@ -13,15 +13,15 @@ export const getUserById = async (_req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({ success: true, result: user });
 };
 
-export const updateUser = async (_req: Request, res: Response) => {
-  res.status(StatusCodes.CREATED).send({ message: 'Updated a user!' });
-};
-
 export const deleteUser = async (_req: Request, res: Response) => {
   const { id } = _req.params;
   await Users.removeById(id);
   res.status(StatusCodes.OK).json({ success: true, message: 'User removed!' });
 };
+
+// export const updateUser = async (_req: Request, res: Response) => {
+//   res.status(StatusCodes.CREATED).send({ message: 'Updated a user!' });
+// };
 
 // replaced with register endpoint cause why?
 // export const createUser = async (_req: Request, res: Response) => {
