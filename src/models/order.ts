@@ -27,4 +27,21 @@ export default class Orders {
       throw new Error(`${err}`);
     }
   };
+  static findActiveOrderIdByUserId = async (
+    userId: number
+  ): Promise<number> => {
+    try {
+      const conn = await Client.connect();
+      const sql = `
+      SELECT id
+      FROM ${SCHEMA}.orders
+      WHERE user_id = $1
+      `;
+      const result = await conn.query(sql, [userId]);
+      return result.rows[0];
+    } catch (err) {
+      console.error(err);
+      throw new Error(`Couldn't fetch active order's id. ${err}`);
+    }
+  };
 }
