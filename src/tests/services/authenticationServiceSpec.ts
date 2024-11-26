@@ -1,5 +1,5 @@
 import Users, { User } from '../../models/user';
-import Authentication from '../../services/authenticationService';
+import Authentication from '../../services/authentication-service';
 
 describe('Testing Authentication Service', () => {
   const validUser: User = {

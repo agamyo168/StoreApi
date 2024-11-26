@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Users, { User } from '../models/user';
 import BadRequestError from '../errors/bad-request-error';
-import Authentication from '../services/authenticationService';
+import Authentication from '../services/authentication-service';
 
 export const getIndex = async (_req: Request, res: Response) => {
   const allUsers: User[] = await Users.findAll();

@@ -26,11 +26,11 @@ tests -> pascalCase?
 - [x] DB MIGRATE Order
 - [x] DB MIGRATE order_products join table. Many-to-Many
 - [x] DB Product create -- req token
-- [ ] DB Product find all
-- [ ] DB Product find by id
-- [ ] DB order create -- req token
-- [ ] DB order find all -- req token
-- [ ] DB order find by id -- req token
+- [x] DB Product find all
+- [x] DB Product find by id
+- [x] DB order create -- req token
+- [x] DB order find all -- req token
+- [x] DB order find by id -- req token
 - [ ] ENDPOINT GET product -> findAll
 - [ ] ENDPOINT GET product/:id -> findId
 - [ ] ENDPOINT POST product -> Create -- req token

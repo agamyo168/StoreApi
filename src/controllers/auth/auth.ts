@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import Users, { User } from '../../models/user';
 import { StatusCodes } from 'http-status-codes';
-import Authentication from '../../services/authenticationService';
+import Authentication from '../../services/authentication-service';
 import BadRequestError from '../../errors/bad-request-error';
 
 const register = async (_req: Request, res: Response, next: NextFunction) => {
