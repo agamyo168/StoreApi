@@ -36,7 +36,7 @@ tests -> pascalCase?
 - [x] ENDPOINT POST product -> Create -- req token
 - [ ] ENDPOINT GET order/active/ -> current order --req token
 - [ ] ENDPOINT GET order/complete/ -> completed orders --req token
-- [ ] ENDPOINT POST order -> Create -- req token
+- [ ] ENDPOINT POST order/active/ -> Create -- req token
 - [ ] VALIDATION register
 - [ ] VALIDATION login
 - [ ] ENDPOINT POST user -> Create -- req token
@@ -86,3 +86,4 @@ tests -> pascalCase?
 - Writing tests. What to test? How to test? I have spent a lot of time deleting and rewriting tests more than coding this far.
 - I need to figure out how to create better tasks and slot time for them cause jumping between tasks has been a time leak in my coding.
 - Finding best practices.
+- Creating
