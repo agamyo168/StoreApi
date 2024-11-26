@@ -11,10 +11,17 @@ describe('Testing endpoints: ', () => {
   });
 });
 
-describe('Testing Authentication endpoints: ', () => {
+describe('Testing AuthenticationService endpoints: ', () => {
   const genericUser = {
     id: 1,
     username: 'genericUser',
+    password: 'genericPassword',
+    firstName: 'genericFirstName',
+    lastName: 'genericLastName',
+  };
+  const fakeUser = {
+    id: 1,
+    username: 'fakeUser',
     password: 'genericPassword',
     firstName: 'genericFirstName',
     lastName: 'genericLastName',
@@ -38,5 +45,12 @@ describe('Testing Authentication endpoints: ', () => {
       .send({ username: genericUser.username, password: genericUser.password });
     expect(res.status).toBe(StatusCodes.ACCEPTED);
     expect(res.body.success).toBe(true);
+  });
+  it(`should give ${StatusCodes.UNAUTHORIZED} for a fake user login`, async () => {
+    const res = await request
+      .post('/api/v1/auth/login')
+      .send({ username: fakeUser.username, password: fakeUser.password });
+    expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
+    expect(res.body.success).toBe(false);
   });
 });

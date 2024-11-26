@@ -1,7 +1,7 @@
 import Users, { User } from '../../models/user';
-import Authentication from '../../services/authentication-service';
+import AuthenticationService from '../../services/authentication-service';
 
-describe('Testing Authentication Service', () => {
+describe('Testing AuthenticationService Service', () => {
   const validUser: User = {
     id: 1,
     username: 'validUser',
@@ -23,20 +23,29 @@ describe('Testing Authentication Service', () => {
     await Users.removeByName(validUser.username);
   });
   it(`should return true for providing a valid credentials `, async () => {
-    const isVerified = await Authentication.verifyUser(validUser);
+    const isVerified =
+      await AuthenticationService.verifyCredentialsAndCreateToken(validUser);
     expect(isVerified === '').toBe(false);
   });
 
-  it(`should return false for providing a fake credentials `, async () => {
-    const isVerified = await Authentication.verifyUser(fakeUser);
-    expect(isVerified === '').toBe(true);
+  it(`should return an error for providing fake credentials`, async () => {
+    try {
+      await AuthenticationService.verifyCredentialsAndCreateToken(fakeUser);
+      fail("Didn't throw an error for providing fake crednetials");
+    } catch (err) {
+      expect(err);
+    }
   });
   it(`should return true for providing a user that doesn't exist in db`, async () => {
-    const isAvailable = await Authentication.isAvailable(fakeUser.username);
+    const isAvailable = await AuthenticationService.isAvailable(
+      fakeUser.username
+    );
     expect(isAvailable).toBe(true);
   });
   it(`should return false for providing an already existing username `, async () => {
-    const isAvailable = await Authentication.isAvailable(validUser.username);
+    const isAvailable = await AuthenticationService.isAvailable(
+      validUser.username
+    );
     expect(isAvailable).toBe(false);
   });
 });
