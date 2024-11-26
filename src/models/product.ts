@@ -12,7 +12,7 @@ class Products {
   static create = async (product: Product): Promise<Product> => {
     const conn = await Client.connect();
     const sql = `
-    INSERT INTO ${SCHEMA}.products
+    INSERT INTO ${SCHEMA}.products(name,price,category)
     VALUES ($1, $2, $3)
     RETURNING id, name, price, category
     `;
@@ -29,7 +29,7 @@ class Products {
       throw new Error(`Couldn't create a product. Error:${err}`);
     }
   };
-  static findAll = async () => {
+  static findAll = async (): Promise<Product[]> => {
     try {
       const conn = await Client.connect();
       const sql = `
@@ -38,20 +38,21 @@ class Products {
       `;
       const result = await conn.query(sql);
       conn.release();
-      return result;
+      return result.rows;
     } catch (err) {
       console.error(err);
       throw new Error(`Couldn't fetch all products: ${err}`);
     }
   };
-  static findById = async (id: string | number | undefined) => {
+  static findById = async (
+    id: string | number | undefined
+  ): Promise<Product> => {
     try {
       const conn = await Client.connect();
       const sql = `
       SELECT * 
       FROM ${SCHEMA}.products
       WHERE id = $1
-      RETURNING name, price, category
       `;
       const result = await conn.query(sql, [id]);
       conn.release();
@@ -59,6 +60,22 @@ class Products {
     } catch (err) {
       console.error(err);
       throw new Error(`Couldn't find a product:${err}`);
+    }
+  };
+  static findByCategory = async (category: string): Promise<Product[]> => {
+    try {
+      const conn = await Client.connect();
+      const sql = `
+      SELECT * 
+      FROM ${SCHEMA}.products
+      WHERE category = $1
+      `;
+      const result = await conn.query(sql, [category]);
+
+      return result.rows;
+    } catch (err) {
+      console.error(err);
+      throw new Error(`Couldn't find products by category. ${err}`);
     }
   };
 }

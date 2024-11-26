@@ -31,11 +31,11 @@ tests -> pascalCase?
 - [x] DB order create -- req token
 - [x] DB order find all -- req token
 - [x] DB order find by id -- req token
-- [ ] ENDPOINT GET product -> findAll
-- [ ] ENDPOINT GET product/:id -> findId
-- [ ] ENDPOINT POST product -> Create -- req token
-- [ ] ENDPOINT GET order -> findAll
-- [ ] ENDPOINT GET order/:id -> findId
+- [x] ENDPOINT GET product -> findAll
+- [x] ENDPOINT GET product/:id -> findId
+- [x] ENDPOINT POST product -> Create -- req token
+- [ ] ENDPOINT GET order/active/ -> current order --req token
+- [ ] ENDPOINT GET order/complete/ -> completed orders --req token
 - [ ] ENDPOINT POST order -> Create -- req token
 - [ ] VALIDATION register
 - [ ] VALIDATION login
