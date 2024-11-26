@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import Users, { User } from '../../models/user';
 import { StatusCodes } from 'http-status-codes';
-import Authentication from '../../services/authentication-service';
+import AuthenticationService from '../../services/authentication-service';
 import BadRequestError from '../../errors/bad-request-error';
+import NotAuthorized from '../../errors/not-authorized-error';
 
 const register = async (_req: Request, res: Response, next: NextFunction) => {
   const { username, password, firstName, lastName } = _req.body;
@@ -17,7 +18,7 @@ const register = async (_req: Request, res: Response, next: NextFunction) => {
   }
   //Need way too many validations -> not_empty. [3, 20] chars.
   //Unique user:
-  const isAvailable = await Authentication.isAvailable(username);
+  const isAvailable = await AuthenticationService.isAvailable(username);
   if (!isAvailable) {
     return next(
       new BadRequestError('Bad request: this username already exists')
@@ -43,8 +44,14 @@ const login = async (_req: Request, res: Response, next: NextFunction) => {
     );
   }
   const user: User = { username, password };
-  const token = await Authentication.verifyUser(user);
-  res.status(StatusCodes.ACCEPTED).json({ success: true, token });
+  try {
+    const token =
+      await AuthenticationService.verifyCredentialsAndCreateToken(user);
+    res.status(StatusCodes.ACCEPTED).json({ success: true, token });
+  } catch (err) {
+    // console.error(err);
+    return next(new NotAuthorized(`Token verification error.${err}`));
+  }
 };
 
 export { login, register };

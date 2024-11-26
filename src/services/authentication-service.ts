@@ -2,19 +2,22 @@ import Users, { User } from '../models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-class Authentication {
-  static verifyUser = async (user: User) => {
+class AuthenticationService {
+  static verifyCredentialsAndCreateToken = async (
+    user: User
+  ): Promise<string> => {
     const userHit = await Users.findByName(user.username);
-    let token = '';
     if (userHit) {
-      const isCorrect = await bcrypt.compare(
+      const isValid = await bcrypt.compare(
         user.password + process.env.BCRYPT_SECRET_PASS,
         userHit.password
       );
-      if (isCorrect) token = this.createToken(userHit);
-      return token;
+      if (isValid) {
+        const token = this.createToken(userHit);
+        return token;
+      }
     }
-    return token;
+    throw new Error('invalid username or password');
   };
   static isAvailable = async (username: string): Promise<boolean> => {
     const user: User = await Users.findByName(username);
@@ -26,6 +29,15 @@ class Authentication {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
   };
+  static verifyToken = async (token: string) => {
+    const decoded = await jwt.verify(token, String(process.env.JWT_SECRET));
+    //TODO: Remove this later.
+    // console.log('Decoded payload:', decoded);
+    return decoded;
+  };
+  // static decode = (token: string) => {
+  //   return jwt.decode(token);
+  // };
 }
 
-export default Authentication;
+export default AuthenticationService;
