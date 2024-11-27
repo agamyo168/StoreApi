@@ -1,4 +1,4 @@
-import Users, { User } from '../../models/user';
+import Users, { User } from '../../models/user.model';
 import AuthenticationService from '../../services/authentication-service';
 
 describe('Testing AuthenticationService Service', () => {

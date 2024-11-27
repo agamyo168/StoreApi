@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import Users, { User } from '../../models/user';
+import Users, { User } from '../../models/user.model';
 import { StatusCodes } from 'http-status-codes';
 import AuthenticationService from '../../services/authentication-service';
 import BadRequestError from '../../errors/bad-request-error';
@@ -30,6 +30,7 @@ const register = async (_req: Request, res: Response, next: NextFunction) => {
     firstName,
     lastName,
   });
+
   res.status(StatusCodes.CREATED).json({ success: true, ...user });
 };
 

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import Products, { Product } from '../models/product';
+import Products, { Product } from '../models/product.model';
 import BadRequestError from '../errors/bad-request-error';
 
 export const createProduct = async (

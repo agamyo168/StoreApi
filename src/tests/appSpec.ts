@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import app from '../app';
 import { StatusCodes } from 'http-status-codes';
-import Users from '../models/user';
+import Users from '../models/user.model';
 
 const request = supertest(app);
 describe('Testing endpoints: ', () => {

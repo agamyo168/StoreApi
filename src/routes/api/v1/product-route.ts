@@ -4,7 +4,7 @@ import {
   createProduct,
   getProductById,
   getProducts,
-} from '../../../controllers/product-controller';
+} from '../../../controllers/product.controller';
 
 const productRoute = Router();
 productRoute
