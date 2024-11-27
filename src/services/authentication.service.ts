@@ -1,6 +1,7 @@
-import Users, { User } from '../models/user.model';
+import Users from '../models/user.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { User } from '../types';
 
 class AuthenticationService {
   static authenticate = async (user: User): Promise<string> => {
