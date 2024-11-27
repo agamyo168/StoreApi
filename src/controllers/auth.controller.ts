@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import Users from '../../models/user.model';
-import { User } from '../../types';
+import BadRequestError from '../errors/bad-request-error';
+import AuthenticationService from '../services/authentication.service';
+import { User } from '../types';
+import Users from '../models/user.model';
 import { StatusCodes } from 'http-status-codes';
-import AuthenticationService from '../../services/authentication.service';
-import BadRequestError from '../../errors/bad-request-error';
-import NotAuthorized from '../../errors/not-authorized-error';
+import NotAuthorized from '../errors/not-authorized-error';
 
 const register = async (_req: Request, res: Response, next: NextFunction) => {
   const { username, password, firstName, lastName } = _req.body;
