@@ -6,30 +6,15 @@ const SALT = process.env.BCRYPT_SALT_ROUNDS;
 const PEPPER = process.env.BCRYPT_SECRET_PASS;
 const SCHEMA = process.env.DB_SCHEMA;
 class Users {
-  private static formatResult({
-    id,
-    username,
-    password,
-    firstname,
-    lastname,
-  }: {
-    id?: number;
-    username: string;
-    password: string;
-    firstname: string;
-    lastname: string;
-  }) {
-    return { id, username, password, firstName: firstname, lastName: lastname };
-  }
   static create = async (user: User): Promise<User> => {
     try {
       const conn = await Client.connect();
       const salt = await bcrypt.genSalt(Number(SALT));
       const hash = await bcrypt.hash(user.password + PEPPER, salt);
       const sql = `
-          INSERT INTO ${SCHEMA}.users (username, password, firstName, lastName)
+          INSERT INTO ${SCHEMA}.users (username, password, first_name, last_name)
           VALUES ($1, $2, $3, $4)
-          RETURNING id, username, firstName, lastName
+          RETURNING id, username, first_name AS "firstName", last_name AS "lastName"
       `;
       const result = await conn.query(sql, [
         user.username,
@@ -40,7 +25,7 @@ class Users {
 
       conn.release();
 
-      return this.formatResult(result.rows[0]);
+      return result.rows[0];
     } catch (err) {
       console.error(err);
       throw new Error(`Couldn't create user. Error:${err}`);
@@ -50,13 +35,18 @@ class Users {
     try {
       const conn = await Client.connect();
       const sql = `
-    SELECT * 
+    SELECT 
+        id,
+        username, 
+        password, 
+        first_name AS "firstName", 
+        last_name AS "lastName"
     FROM ${SCHEMA}.users
     WHERE username = $1
     `;
       const result = await conn.query(sql, [username]);
       conn.release();
-      return this.formatResult(result.rows[0]);
+      return result.rows[0];
     } catch (err) {
       console.error(err);
       throw new Error(`Error: ${err}`);
@@ -67,13 +57,18 @@ class Users {
     try {
       const conn = await Client.connect();
       const sql = `
-      SELECT * 
+      SELECT 
+          id,
+          username, 
+          password, 
+          first_name AS "firstName", 
+          last_name AS "lastName"
       FROM ${SCHEMA}.users
       WHERE id = $1
       `;
       const result = await conn.query(sql, [id]);
       conn.release();
-      return this.formatResult(result.rows[0]);
+      return result.rows[0];
     } catch (err) {
       console.error(err);
       throw new Error(`Error: ${err}`);
@@ -84,12 +79,17 @@ class Users {
     try {
       const conn = await Client.connect();
       const sql = `
-    SELECT * 
+    SELECT
+        id,
+        username, 
+        password, 
+        first_name AS "firstName", 
+        last_name AS "lastName" 
     FROM ${SCHEMA}.users
     `;
       const result = await conn.query(sql);
       conn.release();
-      return result.rows.map((user) => this.formatResult(user));
+      return result.rows;
     } catch (err) {
       console.error(err);
       throw new Error(`Error: ${err}`);
