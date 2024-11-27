@@ -3,9 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 class AuthenticationService {
-  static verifyCredentialsAndCreateToken = async (
-    user: User
-  ): Promise<string> => {
+  static authenticate = async (user: User): Promise<string> => {
     const userHit = await Users.findByName(user.username);
     if (userHit) {
       const isValid = await bcrypt.compare(

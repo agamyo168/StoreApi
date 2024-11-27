@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import Users, { User } from '../../models/user.model';
+import Users from '../../models/user.model';
+import { User } from '../../types';
 import { StatusCodes } from 'http-status-codes';
-import AuthenticationService from '../../services/authentication-service';
+import AuthenticationService from '../../services/authentication.service';
 import BadRequestError from '../../errors/bad-request-error';
 import NotAuthorized from '../../errors/not-authorized-error';
 
@@ -46,8 +47,7 @@ const login = async (_req: Request, res: Response, next: NextFunction) => {
   }
   const user: User = { username, password };
   try {
-    const token =
-      await AuthenticationService.verifyCredentialsAndCreateToken(user);
+    const token = await AuthenticationService.authenticate(user);
     res.status(StatusCodes.ACCEPTED).json({ success: true, token });
   } catch (err) {
     // console.error(err);

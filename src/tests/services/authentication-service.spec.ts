@@ -1,5 +1,5 @@
 import Users, { User } from '../../models/user.model';
-import AuthenticationService from '../../services/authentication-service';
+import AuthenticationService from '../../services/authentication.service';
 
 describe('Testing AuthenticationService Service', () => {
   const validUser: User = {
@@ -23,14 +23,13 @@ describe('Testing AuthenticationService Service', () => {
     await Users.removeByName(validUser.username);
   });
   it(`should return true for providing a valid credentials `, async () => {
-    const isVerified =
-      await AuthenticationService.verifyCredentialsAndCreateToken(validUser);
+    const isVerified = await AuthenticationService.authenticate(validUser);
     expect(isVerified === '').toBe(false);
   });
 
   it(`should return an error for providing fake credentials`, async () => {
     try {
-      await AuthenticationService.verifyCredentialsAndCreateToken(fakeUser);
+      await AuthenticationService.authenticate(fakeUser);
       fail("Didn't throw an error for providing fake crednetials");
     } catch (err) {
       expect(err);

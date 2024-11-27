@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import NotAuthorized from '../errors/not-authorized-error';
-import AuthenticationService from '../services/authentication-service';
+import AuthenticationService from '../services/authentication.service';
 
 const authHandler = async (
   _req: Request,
