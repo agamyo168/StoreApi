@@ -5,14 +5,15 @@ import { User } from '../types';
 
 class AuthenticationService {
   static authenticate = async (user: User): Promise<string> => {
-    const userHit = await Users.findByName(user.username);
-    if (userHit) {
+    const userFound = await Users.findByName(user.username);
+    if (userFound) {
+      const password = `${user.password}${process.env.BCRYPT_SECRET_PASS}`;
       const isValid = await bcrypt.compare(
-        user.password + process.env.BCRYPT_SECRET_PASS,
-        userHit.password
+        password,
+        userFound.password as string
       );
       if (isValid) {
-        const token = this.createToken(userHit);
+        const token = this.createToken(userFound);
         return token;
       }
     }
@@ -28,10 +29,8 @@ class AuthenticationService {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
   };
-  static verifyToken = async (token: string) => {
-    const decoded = await jwt.verify(token, String(process.env.JWT_SECRET));
-    //TODO: Remove this later.
-    // console.log('Decoded payload:', decoded);
+  static verifyToken = (token: string) => {
+    const decoded = jwt.verify(token, String(process.env.JWT_SECRET));
     return decoded;
   };
   // static decode = (token: string) => {

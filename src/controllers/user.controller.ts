@@ -55,11 +55,11 @@ export const createUser = async (
   res.status(StatusCodes.CREATED).json({ success: true, ...user });
 };
 
-export const deleteUser = async (_req: Request, res: Response) => {
-  const { id } = _req.params;
-  await Users.removeById(id);
-  res.status(StatusCodes.OK).json({ success: true, message: 'User removed!' });
-};
+// export const deleteUser = async (_req: Request, res: Response) => {
+//   const { id } = _req.params;
+//   await Users.removeById(id);
+//   res.status(StatusCodes.OK).json({ success: true, message: 'User removed!' });
+// };
 
 // export const updateUser = async (_req: Request, res: Response) => {
 //   res.status(StatusCodes.CREATED).send({ message: 'Updated a user!' });

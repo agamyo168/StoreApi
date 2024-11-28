@@ -27,7 +27,7 @@ describe('Testing AuthenticationService endpoints: ', () => {
     lastName: 'genericLastName',
   };
   afterAll(async () => {
-    await Users.removeByName(genericUser.username);
+    await Users.reset();
   });
   it(`should return ${StatusCodes.CREATED} for a generic test user sign up`, async () => {
     const res = await request.post('/api/v1/auth/register').send(genericUser);

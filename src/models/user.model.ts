@@ -10,7 +10,8 @@ class Users {
     try {
       const conn = await Client.connect();
       const salt = await bcrypt.genSalt(Number(SALT));
-      const hash = await bcrypt.hash(user.password + PEPPER, salt);
+      const password = `${user.password}${PEPPER}`;
+      const hash = await bcrypt.hash(password, salt);
       const sql = `
           INSERT INTO ${SCHEMA}.users (username, password, first_name, last_name)
           VALUES ($1, $2, $3, $4)
@@ -22,13 +23,12 @@ class Users {
         user.firstName,
         user.lastName,
       ]);
-
       conn.release();
 
       return result.rows[0];
     } catch (err) {
       console.error(err);
-      throw new Error(`Couldn't create user. Error:${err}`);
+      throw new Error(`Couldn't create user. ${err}`);
     }
   };
   static findByName = async (username: string): Promise<User> => {
@@ -96,6 +96,23 @@ class Users {
     }
   };
 
+  //TODO: this is for testing remove it later.
+  static reset = async () => {
+    try {
+      const conn = await Client.connect();
+
+      //query that deletes all rows in users and resets id to 1.
+      const sql = `
+      TRUNCATE TABLE ${process.env.DB_SCHEMA}.users RESTART IDENTITY CASCADE;
+      `;
+      await conn.query(sql);
+      conn.release();
+    } catch (error) {
+      throw new Error(`Couldn't delete test user. ${error}`);
+    }
+  };
+
+  /*
   static removeById = async (id: string | number | undefined) => {
     try {
       const conn = await Client.connect();
@@ -126,5 +143,7 @@ class Users {
       throw new Error(`Error: ${err}`);
     }
   };
+  */
 }
+
 export default Users;
