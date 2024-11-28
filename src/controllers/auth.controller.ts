@@ -25,6 +25,7 @@ const register = async (_req: Request, res: Response, next: NextFunction) => {
       new BadRequestError('Bad request: this username already exists')
     );
   }
+
   const user: User = await Users.create({
     username,
     password,
@@ -48,10 +49,11 @@ const login = async (_req: Request, res: Response, next: NextFunction) => {
   const user: User = { username, password };
   try {
     const token = await AuthenticationService.authenticate(user);
-    res.status(StatusCodes.ACCEPTED).json({ success: true, token });
-  } catch (err) {
-    // console.error(err);
-    return next(new NotAuthorized(`Token verification error.${err}`));
+    res.status(StatusCodes.OK).json({ success: true, token });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_err) {
+    // console.error(`${err}`);
+    return next(new NotAuthorized(`Token verification error.`));
   }
 };
 
