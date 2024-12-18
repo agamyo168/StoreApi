@@ -1,9 +1,8 @@
 # StoreAPI
 
-## Naming Conventions
+### Naming Conventions
 
 everything -> kebab?
-tests -> pascalCase?
 
 ### Tasks
 
