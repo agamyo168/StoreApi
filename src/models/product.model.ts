@@ -1,12 +1,7 @@
 import Client from '../database/database';
+import { Product } from '../types';
 import logger from '../utils/logger';
 
-export type Product = {
-  id?: string | number;
-  name: string;
-  price: number;
-  category: string;
-};
 const SCHEMA = process.env.DB_SCHEMA;
 //Repository?
 class Products {
@@ -77,6 +72,19 @@ class Products {
     } catch (err) {
       logger.error(err);
       throw new Error(`Couldn't find products by category. ${err}`);
+    }
+  };
+  static reset = async () => {
+    try {
+      const conn = await Client.connect();
+      const sql = `
+      TRUNCATE TABLE ${process.env.DB_SCHEMA}.products RESTART IDENTITY CASCADE;
+      `;
+      await conn.query(sql);
+      conn.release();
+    } catch (error) {
+      logger.error(error);
+      throw new Error(`Couldn't truncate the products table. ${error}`);
     }
   };
 }

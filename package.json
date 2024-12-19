@@ -16,8 +16,7 @@
     "watch": "tsc-watch --esModuleInterop src/app.ts --outDir ./dist",
     "migrate": "npx db-migrate up",
     "migrate:down": "npx db-migrate down",
-    "migrate:reset": "npx db-migrate reset",
-    "test:migrate": "npx db-migrate reset && npx db-migrate up && npm run build && npm run jasmine"
+    "migrate:reset": "npx db-migrate reset"
   },
   "keywords": [],
   "author": "",

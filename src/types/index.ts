@@ -1,2 +1,4 @@
+import Product from './product.type';
 import User from './user.type';
-export { User };
+
+export { Product, User };

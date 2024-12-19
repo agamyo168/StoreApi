@@ -1,7 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import Products, { Product } from '../models/product.model';
 import BadRequestError from '../errors/bad-request-error';
+import NotFound from '../errors/not-found-error';
+import Products from '../models/product.model';
+import { Product } from '../types';
+import logger from '../utils/logger';
 
 export const createProduct = async (
   _req: Request,
@@ -16,12 +19,26 @@ export const createProduct = async (
         "Body doesn't have either category, name, and or price "
       )
     );
-  const result = await Products.create({ category, name, price });
-  res.status(StatusCodes.OK).json({ success: true, result: result });
+  try {
+    const result = await Products.create({ category, name, price });
+    res.status(StatusCodes.CREATED).json({ success: true, result: result });
+  } catch (err) {
+    logger.error(err);
+    return next(new Error(`Couldn't create the product`));
+  }
 };
-export const getProducts = async (_req: Request, res: Response) => {
-  const result = await Products.findAll();
-  res.status(StatusCodes.OK).json({ success: true, result: result });
+export const getProducts = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const result = await Products.findAll();
+    res.status(StatusCodes.OK).json({ success: true, result: result });
+  } catch (err) {
+    logger.error(err);
+    return next(new Error(`Couldn't fetch the products`));
+  }
 };
 
 // export const getProductsByCategory = async (_req: Request, res: Response) => {
@@ -30,8 +47,18 @@ export const getProducts = async (_req: Request, res: Response) => {
 //   res.status(StatusCodes.OK).json({ success: true, result });
 // };
 
-export const getProductById = async (_req: Request, res: Response) => {
+export const getProductById = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id } = _req.params;
-  const result = await Products.findById(id);
-  res.status(StatusCodes.OK).json({ success: true, result: result });
+  try {
+    const result = await Products.findById(id);
+    if (result == undefined) return next(new NotFound(`Product doesn't exist`));
+    res.status(StatusCodes.OK).json({ success: true, result: result });
+  } catch (err) {
+    logger.error(err);
+    return next(new Error(`Couldn't find the product`));
+  }
 };
