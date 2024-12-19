@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import BadRequestError from '../errors/bad-request-error';
+import ConflictError from '../errors/conflict-error';
 import NotAuthorized from '../errors/not-authorized-error';
 import Users from '../models/user.model';
 import AuthenticationService from '../services/authentication.service';
@@ -22,9 +23,7 @@ const register = async (_req: Request, res: Response, next: NextFunction) => {
   //Unique user:
   const isAvailable = await AuthenticationService.isAvailable(username);
   if (!isAvailable) {
-    return next(
-      new BadRequestError('Bad request: this username already exists')
-    );
+    return next(new ConflictError('Conflict: this username already exists'));
   }
 
   const user: User = await Users.create({

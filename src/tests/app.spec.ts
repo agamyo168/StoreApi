@@ -1,6 +1,6 @@
+import { StatusCodes } from 'http-status-codes';
 import supertest from 'supertest';
 import app from '../app';
-import { StatusCodes } from 'http-status-codes';
 import Users from '../models/user.model';
 
 const request = supertest(app);
@@ -58,5 +58,9 @@ describe('Testing endpoints: ', () => {
       expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
       expect(res.body.success).toBe(false);
     });
+  });
+
+  describe('Endpoint #2', () => {
+    it('Endpoint', () => {});
   });
 });
