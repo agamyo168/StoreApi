@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import BadRequestError from '../errors/bad-request-error';
+import NotAuthorized from '../errors/not-authorized-error';
+import Users from '../models/user.model';
 import AuthenticationService from '../services/authentication.service';
 import { User } from '../types';
-import Users from '../models/user.model';
-import { StatusCodes } from 'http-status-codes';
-import NotAuthorized from '../errors/not-authorized-error';
+import logger from '../utils/logger';
 
 const register = async (_req: Request, res: Response, next: NextFunction) => {
   const { username, password, firstName, lastName } = _req.body;
@@ -50,9 +51,8 @@ const login = async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await AuthenticationService.authenticate(user);
     res.status(StatusCodes.OK).json({ success: true, token });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_err) {
-    // console.error(`${err}`);
+    logger.error(_err);
     return next(new NotAuthorized(`Token verification error.`));
   }
 };

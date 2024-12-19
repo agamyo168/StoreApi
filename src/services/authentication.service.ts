@@ -1,13 +1,13 @@
-import Users from '../models/user.model';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import Users from '../models/user.model';
 import { User } from '../types';
 
 class AuthenticationService {
   static authenticate = async (user: User): Promise<string> => {
     const userFound = await Users.findByName(user.username);
     if (userFound) {
-      const password = `${user.password}${process.env.BCRYPT_SECRET_PASS}`;
+      const password = `${user.password}${process.env.BCRYPT_SECRET_PEPPER}`;
       const isValid = await bcrypt.compare(
         password,
         userFound.password as string
@@ -26,7 +26,7 @@ class AuthenticationService {
   static createToken = (user: User) => {
     const secret = String(process.env.JWT_SECRET);
     return jwt.sign({ name: user.username, id: user.id }, secret, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
+      expiresIn: process.env.JWT_EXPIRE,
     });
   };
   static verifyToken = (token: string) => {

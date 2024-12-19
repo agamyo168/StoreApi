@@ -1,4 +1,5 @@
 import Client from '../database/database';
+import logger from '../utils/logger';
 export const enum CurrentStatus {
   ACTIVE = 'active',
   COMPLETE = 'complete',
@@ -22,7 +23,7 @@ export default class Orders {
       conn.release();
       return result.rows[0];
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`${err}`);
     }
   };

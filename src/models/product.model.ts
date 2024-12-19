@@ -1,4 +1,5 @@
 import Client from '../database/database';
+import logger from '../utils/logger';
 
 export type Product = {
   id?: string | number;
@@ -25,7 +26,7 @@ class Products {
       conn.release();
       return result.rows[0];
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`Couldn't create a product. Error:${err}`);
     }
   };
@@ -40,7 +41,7 @@ class Products {
       conn.release();
       return result.rows;
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`Couldn't fetch all products: ${err}`);
     }
   };
@@ -58,7 +59,7 @@ class Products {
       conn.release();
       return result.rows[0];
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`Couldn't find a product:${err}`);
     }
   };
@@ -74,7 +75,7 @@ class Products {
 
       return result.rows;
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`Couldn't find products by category. ${err}`);
     }
   };

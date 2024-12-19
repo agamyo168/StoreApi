@@ -1,9 +1,10 @@
+import bcrypt from 'bcryptjs';
 import Client from '../database/database';
-import bcrypt from 'bcrypt';
 import { User } from '../types';
+import logger from '../utils/logger';
 
 const SALT = process.env.BCRYPT_SALT_ROUNDS;
-const PEPPER = process.env.BCRYPT_SECRET_PASS;
+const PEPPER = process.env.BCRYPT_SECRET_PEPPER;
 const SCHEMA = process.env.DB_SCHEMA;
 class Users {
   static create = async (user: User): Promise<User> => {
@@ -27,7 +28,7 @@ class Users {
 
       return result.rows[0];
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`Couldn't create user. ${err}`);
     }
   };
@@ -48,7 +49,7 @@ class Users {
       conn.release();
       return result.rows[0];
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`Error: ${err}`);
     }
   };
@@ -70,7 +71,7 @@ class Users {
       conn.release();
       return result.rows[0];
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`Error: ${err}`);
     }
   };
@@ -91,7 +92,7 @@ class Users {
       conn.release();
       return result.rows;
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`Error: ${err}`);
     }
   };
@@ -124,7 +125,7 @@ class Users {
       await conn.query(sql, [id]);
       conn.release();
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`Error: ${err}`);
     }
   };
@@ -139,7 +140,7 @@ class Users {
       await conn.query(sql, [username]);
       conn.release();
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`Error: ${err}`);
     }
   };

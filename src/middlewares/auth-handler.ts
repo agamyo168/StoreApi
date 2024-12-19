@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import NotAuthorized from '../errors/not-authorized-error';
 import AuthenticationService from '../services/authentication.service';
+import logger from '../utils/logger';
 
 const authHandler = async (
   _req: Request,
@@ -16,6 +17,7 @@ const authHandler = async (
     const payload = await AuthenticationService.verifyToken(token);
     res.locals.user = payload;
   } catch (err) {
+    logger.error(err);
     return next(new NotAuthorized(`Token verification failed: ${err}`));
   }
   next();

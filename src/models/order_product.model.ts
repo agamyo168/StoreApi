@@ -1,4 +1,5 @@
 import Client from '../database/database';
+import logger from '../utils/logger';
 
 export type OrderProduct = {
   order_id: number;
@@ -23,7 +24,7 @@ class OrderProducts {
       conn.release();
       return result.rows[0];
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`Couldn't add a new product to order. Error: ${err}`);
     }
   };
@@ -39,7 +40,7 @@ class OrderProducts {
       conn.release();
       return result.rows;
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw new Error(`Couldn't fetch all producs. Error: ${err}`);
     }
   };
