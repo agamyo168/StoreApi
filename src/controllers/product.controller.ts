@@ -52,9 +52,9 @@ export const getProductById = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { id } = _req.params;
+  const { productId } = _req.params;
   try {
-    const result = await Products.findById(id);
+    const result = await Products.findById(productId);
     if (result == undefined) return next(new NotFound(`Product doesn't exist`));
     res.status(StatusCodes.OK).json({ success: true, result: result });
   } catch (err) {

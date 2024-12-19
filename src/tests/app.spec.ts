@@ -129,7 +129,7 @@ describe('Testing endpoints: ', () => {
       //TODO: Pagination
       //TODO: Sorting
     });
-    describe(`GET ${ROUTE}/:id`, () => {
+    describe(`GET ${ROUTE}/:productId`, () => {
       it(`When trying to get a product providing an existing product id`, async () => {
         const product = {
           name: 'Keyboard',
