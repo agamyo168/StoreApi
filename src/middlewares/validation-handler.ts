@@ -22,8 +22,6 @@ const validateQueryHandler = (schema: Joi.ObjectSchema): RequestHandler => {
 };
 const validateParamHandler = (schema: Joi.ObjectSchema): RequestHandler => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.params);
-
     const { error } = schema.validate(req.params);
     if (error) {
       return next(new BadRequestError(`${error}`));

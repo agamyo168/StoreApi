@@ -46,5 +46,19 @@ class OrderProducts {
   };
   static delete = async () => {};
   static update = async () => {};
+  static reset = async () => {
+    try {
+      const conn = await Client.connect();
+
+      //query that deletes all rows in users and resets id to 1.
+      const sql = `
+      TRUNCATE TABLE ${process.env.DB_SCHEMA}.order_product RESTART IDENTITY CASCADE;
+      `;
+      await conn.query(sql);
+      conn.release();
+    } catch (error) {
+      throw new Error(`Couldn't delete test order_product. ${error}`);
+    }
+  };
 }
 export default OrderProducts;

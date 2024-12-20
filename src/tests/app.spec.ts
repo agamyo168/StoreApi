@@ -1,18 +1,15 @@
 import { StatusCodes } from 'http-status-codes';
 import supertest from 'supertest';
 import app from '../app';
+import Orders from '../models/order.model';
 import Products from '../models/product.model';
 import Users from '../models/user.model';
 
 const request = supertest(app);
-// describe('Testing', () => {
-//   it('Hello', () => {
-//     console.log('Hello');
-//   });
-// });
 
 describe('Testing endpoints: ', () => {
   afterAll(async () => {
+    await Orders.reset();
     await Products.reset();
     await Users.reset();
   });
@@ -41,7 +38,7 @@ describe('Testing endpoints: ', () => {
 
   describe('Testing authentication endpoints: ', () => {
     const ROUTE = '/api/v1/auth/';
-    describe(`POST ${ROUTE}/register`, () => {
+    describe(`POST ${ROUTE}register`, () => {
       it(`When registering a new user using unique username, expect status:${StatusCodes.CREATED} and success to be true `, async () => {
         const res = await request
           .post('/api/v1/auth/register')
@@ -57,7 +54,7 @@ describe('Testing endpoints: ', () => {
         expect(res.body.success).toBe(false);
       });
     });
-    describe(`POST ${ROUTE}/login`, () => {
+    describe(`POST ${ROUTE}login`, () => {
       it(`When logging in with a registered user credentials, expect status:${StatusCodes.OK} and success: true`, async () => {
         const res = await request.post('/api/v1/auth/login').send({
           username: genericUser.username,
@@ -68,11 +65,11 @@ describe('Testing endpoints: ', () => {
         expect(token).toMatch(/^[a-zA-Z0-9-_]+.[a-zA-Z0-9-_]+.[a-zA-Z0-9-_]+$/);
         expect(res.body.success).toBe(true);
       });
-      it(`When logging in with user credentials that are not registered, expect status:  ${StatusCodes.UNAUTHORIZED} and success: false.`, async () => {
+      it(`When logging in with user credentials that are not registered, expect status:  ${StatusCodes.BAD_REQUEST} and success: false.`, async () => {
         const res = await request
           .post('/api/v1/auth/login')
           .send({ username: fakeUser.username, password: fakeUser.password });
-        expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
+        expect(res.status).toBe(StatusCodes.BAD_REQUEST);
         expect(res.body.success).toBe(false);
       });
     });
@@ -147,6 +144,88 @@ describe('Testing endpoints: ', () => {
       it(`When trying to get a product providing a non numeric parameter, it should return status: ${StatusCodes.BAD_REQUEST}`, async () => {
         const res = await request.get(`${ROUTE}/asde23`);
         expect(res.status).toBe(StatusCodes.BAD_REQUEST);
+      });
+    });
+  });
+
+  describe('Testing Orders Endpoints', () => {
+    const ROUTE = '/api/v1/orders';
+
+    describe(`POST ${ROUTE}/`, async () => {
+      it(`When adding a new active order, it should return ${StatusCodes.UNAUTHORIZED}`, async () => {
+        //arrange:
+        const product = {
+          id: 1,
+          quantity: 1,
+        };
+        const products = [product];
+
+        const res = await request.post(`${ROUTE}/`).send(products);
+        expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
+      });
+      it(`When adding a new active order, it should return ${StatusCodes.CREATED} and active order's id`, async () => {
+        //arrange:
+        const product = {
+          id: 1,
+          quantity: 1,
+        };
+        const products = [product];
+
+        const res = await request
+          .post(`${ROUTE}/`)
+          .send(products)
+          .auth(token, { type: 'bearer' });
+        expect(res.status).toBe(StatusCodes.CREATED);
+        expect(res.body.order.id).toBeDefined();
+      });
+    });
+    describe(`POST ${ROUTE}/:orderId/complete`, async () => {
+      it(`When completing an active order, it should return status: ${StatusCodes.OK}`, async () => {
+        const res = await request
+          .post(`${ROUTE}/1`)
+          .auth(token, { type: 'bearer' });
+        expect(res.status).toBe(StatusCodes.OK);
+      });
+    });
+    describe(`GET ${ROUTE}/`, () => {
+      it(`When trying to get all user's orders without providing access token, it should return status: ${StatusCodes.UNAUTHORIZED}`, async () => {
+        const res = await request.get(ROUTE);
+        expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
+      });
+      it(`When trying to get all user's orders providing access token, it should return status: ${StatusCodes.OK}`, async () => {
+        //arrange
+        const product = {
+          id: 1,
+          name: 'Keyboard',
+          price: 100,
+          category: 'Electronics',
+          quantity: 1,
+        };
+        const res = await request.get(ROUTE).auth(token, { type: 'bearer' });
+        expect(res.status).toBe(StatusCodes.OK);
+        expect(res.body.orders[0].orderItems[0]).toEqual(product);
+      });
+    });
+    describe(`GET ${ROUTE}/:orderId`, async () => {
+      it(`When trying to get a user's completed order`, async () => {});
+    });
+    describe(`GET ${ROUTE}/active`, () => {
+      it(`When trying to get user's active orders without providing access token, it should return status: ${StatusCodes.UNAUTHORIZED}`, async () => {
+        const res = await request.get(`${ROUTE}/active`);
+        expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
+      });
+      it(`When trying to get user's active orders, it should return status: ${StatusCodes.OK} and an array of type Product[]`, async () => {
+        //arrange
+        const product = {
+          name: 'Keyboard',
+          price: 100,
+          category: 'Electronics',
+        };
+        const res = await request
+          .get(`${ROUTE}/active`)
+          .auth(token, { type: 'bearer' });
+        expect(res.status).toBe(StatusCodes.OK);
+        expect(res.body.products[0]).toEqual(product);
       });
     });
   });

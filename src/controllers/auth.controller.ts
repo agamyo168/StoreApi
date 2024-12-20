@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import BadRequestError from '../errors/bad-request-error';
 import ConflictError from '../errors/conflict-error';
-import NotAuthorized from '../errors/not-authorized-error';
 import Users from '../models/user.model';
 import AuthenticationService from '../services/authentication.service';
 import { User } from '../types';
@@ -52,7 +51,7 @@ const login = async (_req: Request, res: Response, next: NextFunction) => {
     res.status(StatusCodes.OK).json({ success: true, token });
   } catch (_err) {
     logger.error(_err);
-    return next(new NotAuthorized(`Token verification error.`));
+    return next(new BadRequestError(`invalid username or password`));
   }
 };
 
