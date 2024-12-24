@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import BadRequestError from '../errors/bad-request-error';
 import NotFound from '../errors/not-found-error';
 import Products from '../models/product.model';
 import { Product } from '../types';
@@ -12,13 +11,6 @@ export const createProduct = async (
   next: NextFunction
 ) => {
   const { category, name, price }: Product = _req.body;
-  //Validate:
-  if (!category || !name || !price)
-    return next(
-      new BadRequestError(
-        "Body doesn't have either category, name, and or price "
-      )
-    );
   try {
     const result = await Products.create({ category, name, price });
     res.status(StatusCodes.CREATED).json({ success: true, result: result });
