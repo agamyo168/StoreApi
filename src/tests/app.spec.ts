@@ -173,18 +173,27 @@ describe('Testing endpoints: ', () => {
 
         const res = await request
           .post(`${ROUTE}/`)
-          .send(products)
+          .send({ products })
           .auth(token, { type: 'bearer' });
         expect(res.status).toBe(StatusCodes.CREATED);
         expect(res.body.order.id).toBeDefined();
       });
     });
-    describe(`POST ${ROUTE}/:orderId/complete`, async () => {
+    describe(`PATCH ${ROUTE}/:orderId/complete`, async () => {
+      it(`When completing an active order not providing access token, it should return status: ${StatusCodes.UNAUTHORIZED}`, async () => {
+        const res = await request.patch(`${ROUTE}/1/complete`);
+        expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
+      });
       it(`When completing an active order, it should return status: ${StatusCodes.OK}`, async () => {
         const res = await request
-          .post(`${ROUTE}/1`)
+          .patch(`${ROUTE}/1/complete`)
           .auth(token, { type: 'bearer' });
         expect(res.status).toBe(StatusCodes.OK);
+        expect(res.body.order).toEqual({
+          id: 1,
+          current_status: 'complete',
+          user_id: 1,
+        });
       });
     });
     describe(`GET ${ROUTE}/`, () => {
@@ -207,25 +216,30 @@ describe('Testing endpoints: ', () => {
       });
     });
     describe(`GET ${ROUTE}/:orderId`, async () => {
-      it(`When trying to get a user's completed order`, async () => {});
-    });
-    describe(`GET ${ROUTE}/active`, () => {
+      it(`When trying to get a user's order`, async () => {});
       it(`When trying to get user's active orders without providing access token, it should return status: ${StatusCodes.UNAUTHORIZED}`, async () => {
-        const res = await request.get(`${ROUTE}/active`);
+        const res = await request.get(`${ROUTE}/1`);
         expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
       });
-      it(`When trying to get user's active orders, it should return status: ${StatusCodes.OK} and an array of type Product[]`, async () => {
+      it(`When trying to get a user's order, it should return status: ${StatusCodes.OK} and an order`, async () => {
         //arrange
-        const product = {
-          name: 'Keyboard',
-          price: 100,
-          category: 'Electronics',
+        const order = {
+          id: 1,
+          user_id: 1,
+          current_status: 'complete',
         };
         const res = await request
-          .get(`${ROUTE}/active`)
+          .get(`${ROUTE}/1`)
           .auth(token, { type: 'bearer' });
         expect(res.status).toBe(StatusCodes.OK);
-        expect(res.body.products[0]).toEqual(product);
+        const { id, user_id, current_status } = res.body.order;
+        expect({ id, user_id, current_status }).toEqual(order);
+      });
+      it(`When trying to get a user's order that doesn't exist, it should return status: ${StatusCodes.NOT_FOUND} `, async () => {
+        const res = await request
+          .get(`${ROUTE}/99`)
+          .auth(token, { type: 'bearer' });
+        expect(res.status).toBe(StatusCodes.NOT_FOUND);
       });
     });
   });
