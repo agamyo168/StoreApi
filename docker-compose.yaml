@@ -1,0 +1,25 @@
+services:
+  store_db:
+    image: 'postgres'
+    env_file:
+      - store_app.env
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+  store_app:
+    build: .
+    env_file:
+      - store_app.env
+    ports:
+      - '${PORT}:${PORT}'
+    environment:
+      - DB_HOST=store_db
+      - DB_PORT=${DB_PORT}
+    volumes:
+      - .:/app
+    depends_on:
+      - store_db
+    links:
+      - store_db

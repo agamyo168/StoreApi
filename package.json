@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run clean && npx tsc",
-    "start": "node --env-file=.env dist/app.js",
+    "start": "npm run build && node --env-file=store_app.env dist/app.js",
     "dev": "nodemon src/app.ts",
     "format": "prettier --config ./.prettierrc --write \"src/**/*.{ts,js}\"",
     "lint": "eslint  \"src/**/*.{ts,js}\"",
