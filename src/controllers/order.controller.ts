@@ -87,6 +87,7 @@ const completeOrder = async (
     const { orderId } = _req.params;
     const { id } = res.locals.user;
     const order = await Orders.completeOrder(Number(id), Number(orderId));
+    if (!order) return next(new NotFound(`There's no such active order`));
     res.status(StatusCodes.OK).json({ success: true, order });
   } catch (err) {
     logger.error(err);

@@ -152,7 +152,7 @@ describe('Testing endpoints: ', () => {
     const ROUTE = '/api/v1/orders';
 
     describe(`POST ${ROUTE}/`, async () => {
-      it(`When adding a new active order, it should return ${StatusCodes.UNAUTHORIZED}`, async () => {
+      it(`When adding a new active order, it should return ${StatusCodes.UNAUTHORIZED} because you didn't provide a JWT`, async () => {
         //arrange:
         const product = {
           id: 1,
@@ -178,13 +178,36 @@ describe('Testing endpoints: ', () => {
         expect(res.status).toBe(StatusCodes.CREATED);
         expect(res.body.order.id).toBeDefined();
       });
+      it(`When adding a new active order but providing a messed up products list, it should return ${StatusCodes.BAD_REQUEST}`, async () => {
+        //arrange:
+        const products = [
+          {
+            id: 1,
+            quantity: 1,
+          },
+          {
+            id: -1,
+            quantity: 1,
+          },
+          {
+            quantity: 1,
+          },
+          {},
+        ];
+
+        const res = await request
+          .post(`${ROUTE}/`)
+          .send({ products })
+          .auth(token, { type: 'bearer' });
+        expect(res.status).toBe(StatusCodes.BAD_REQUEST);
+      });
     });
     describe(`PATCH ${ROUTE}/:orderId/complete`, async () => {
       it(`When completing an active order not providing access token, it should return status: ${StatusCodes.UNAUTHORIZED}`, async () => {
         const res = await request.patch(`${ROUTE}/1/complete`);
         expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
       });
-      it(`When completing an active order, it should return status: ${StatusCodes.OK}`, async () => {
+      it(`When completing an active order, it should return status: ${StatusCodes.OK} and the updated order`, async () => {
         const res = await request
           .patch(`${ROUTE}/1/complete`)
           .auth(token, { type: 'bearer' });
@@ -194,6 +217,13 @@ describe('Testing endpoints: ', () => {
           current_status: 'complete',
           user_id: 1,
         });
+      });
+      it(`When completing an non-existent active order, it should return status: ${StatusCodes.NOT_FOUND}`, async () => {
+        const res = await request
+          .patch(`${ROUTE}/99/complete`)
+          .auth(token, { type: 'bearer' });
+        expect(res.status).toBe(StatusCodes.NOT_FOUND);
+        expect(res.body.success).toBe(false);
       });
     });
     describe(`GET ${ROUTE}/`, () => {
@@ -214,14 +244,29 @@ describe('Testing endpoints: ', () => {
         expect(res.status).toBe(StatusCodes.OK);
         expect(res.body.orders[0].orderItems[0]).toEqual(product);
       });
+      it(`When trying to get all user's complete orders using query params, it should return status: ${StatusCodes.OK}`, async () => {
+        //arrange
+        const product = {
+          id: 1,
+          name: 'Keyboard',
+          price: 100,
+          category: 'Electronics',
+          quantity: 1,
+        };
+        const res = await request
+          .get(ROUTE)
+          .auth(token, { type: 'bearer' })
+          .query({ status: 'complete' });
+        expect(res.status).toBe(StatusCodes.OK);
+        expect(res.body.orders[0].orderItems[0]).toEqual(product);
+      });
     });
     describe(`GET ${ROUTE}/:orderId`, async () => {
-      it(`When trying to get a user's order`, async () => {});
       it(`When trying to get user's active orders without providing access token, it should return status: ${StatusCodes.UNAUTHORIZED}`, async () => {
         const res = await request.get(`${ROUTE}/1`);
         expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
       });
-      it(`When trying to get a user's order, it should return status: ${StatusCodes.OK} and an order`, async () => {
+      it(`When trying to get a user's order by order id, it should return status: ${StatusCodes.OK} and that order`, async () => {
         //arrange
         const order = {
           id: 1,
